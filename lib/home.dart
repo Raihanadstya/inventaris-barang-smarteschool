@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:intl/date_symbol_data_file.dart';
 import 'package:inventaris_barang_smarteschool/database/firebase.dart';
 import 'package:inventaris_barang_smarteschool/login_page.dart';
@@ -21,6 +22,9 @@ import 'package:intl/intl.dart';
 import 'package:inventaris_barang_smarteschool/model/user.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/tap_bounce_container.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -91,7 +95,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           _goodProductController.text = _barang!.baik.toString();
           badProductController.text = _barang!.rusak.toString();
           _productBuyDate = _barang!.tahunBeli;
-          // dropdownValue = _barang!.kepemilikan;
+
           lokasiDropdownValue = _barang!.mLokasiId;
           _setTimeController.text =
               DateFormat("EEEE, d MMMM yyyy").format(_productBuyDate);
@@ -125,8 +129,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(response.toString())));
+      showTopSnackBar(
+        context,
+        CustomSnackBar.error(
+          message: "Sesi anda sudah habis, harap login kembali",
+        ),
+      );
+
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const LoginPage()));
     }
@@ -168,35 +177,21 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
       Navigator.pop(context);
       fetchBarang(_barang!.id);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Data Berhasil diubah"),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.green,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          margin: EdgeInsets.only(
-              bottom: MediaQuery.of(context).size.height - 150,
-              right: 20,
-              left: 20),
+      showTopSnackBar(
+        context,
+        CustomSnackBar.success(
+          message: "Data Berhasil diubah",
         ),
       );
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Anda tidak memiliki akses untuk mengedit"),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.red,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+      showTopSnackBar(
+        context,
+        CustomSnackBar.error(
+          message: "Anda tidak memiliki akses untuk mengedit",
         ),
-        margin: EdgeInsets.only(
-            bottom: MediaQuery.of(context).size.height - 150,
-            right: 20,
-            left: 20),
-      ));
+      );
     }
   }
 
@@ -258,13 +253,20 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   _getFromGallery() async {
     PickedFile? pickedFile = await ImagePicker().getImage(
       source: ImageSource.gallery,
-      maxWidth: 200,
-      maxHeight: 200,
+      maxWidth: 1000,
+      maxHeight: 1000,
     );
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
         Navigator.pop(context);
+        showModalBottomSheet(
+            transitionAnimationController: controller,
+            isScrollControlled: true,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
+            context: context,
+            builder: (context) => buildSheet());
       });
     }
   }
@@ -272,13 +274,20 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   _getFromCamera() async {
     PickedFile? pickedFile = await ImagePicker().getImage(
       source: ImageSource.camera,
-      maxWidth: 200,
-      maxHeight: 200,
+      maxWidth: 1000,
+      maxHeight: 1000,
     );
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
-        Navigator.of(context).pop();
+        Navigator.pop(context);
+        showModalBottomSheet(
+            transitionAnimationController: controller,
+            isScrollControlled: true,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(30))),
+            context: context,
+            builder: (context) => buildSheet());
       });
     }
   }
@@ -306,7 +315,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         child: currentScreen,
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: scanBarcode,
+          onPressed: () => scanBarcode(),
           child: SvgPicture.asset(
             "assets/images/icon-scan.svg",
             width: 40,
@@ -949,14 +958,28 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       Align(
                         alignment: Alignment.center,
                         child: GestureDetector(
-                          onTap: () => showModalBottomSheet(
-                              transitionAnimationController: controller,
-                              isScrollControlled: true,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(30))),
-                              context: context,
-                              builder: (context) => modalFoto()),
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CupertinoAlertDialog(
+                                    title:
+                                        Text("Pilh media untuk mengambil foto"),
+                                    actions: [
+                                      CupertinoDialogAction(
+                                          onPressed: () {
+                                            _getFromGallery();
+                                          },
+                                          child: Text("Galeri")),
+                                      CupertinoDialogAction(
+                                          onPressed: () {
+                                            _getFromCamera();
+                                          },
+                                          child: Text("kamera")),
+                                    ],
+                                  );
+                                });
+                          },
                           child: Container(
                               decoration: BoxDecoration(
                                   color: birumuda,
@@ -965,21 +988,19 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                       BorderRadius.all(Radius.circular(25))),
                               child: Row(
                                 children: [
-                                  if (_barang!.foto != null)
-                                    // ?
-                                    Image.network(
-                                      (_barang!.foto).toString(),
-                                      width: 200,
-                                      height: 200,
-                                    ),
-                                  //     Image.file(
-                                  //         _imageFile!,
-                                  //         width: 200,
-                                  //         height: 200,
-                                  //       )
-                                  //     : Image(
-                                  //         image: AssetImage(
-                                  //             'assets/images/icon v1.png')),
+                                  _imageFile == null
+                                      ?
+                                      // ?
+                                      Image.network(
+                                          (_barang!.foto).toString(),
+                                          width: 200,
+                                          height: 200,
+                                        )
+                                      : Image.file(
+                                          (_imageFile!),
+                                          width: 200,
+                                          height: 200,
+                                        ),
                                   IconButton(
                                       onPressed: null, icon: Icon(Icons.edit))
                                 ],
@@ -1166,18 +1187,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
-                  // TextFormField(
-                  //   controller: _locationProductController,
-                  //   enabled: false,
-                  //   decoration: InputDecoration(
-                  //     // fillColor: Colors.blue[100],
-                  //     // filled: true,
-                  //     border: OutlineInputBorder(
-                  //       borderRadius: BorderRadius.circular(10.0),
-                  //     ),
-                  //     labelText: "Lokasi",
-                  //   ),
-                  // ),
                   SizedBox(height: 15),
                   TextFormField(
                     controller: _totalProductController,
@@ -1233,38 +1242,5 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             ),
           );
         },
-      );
-
-  Widget modalFoto() => Container(
-        padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 30.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text('Pilh media untuk mengambil foto',
-                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 25)),
-            SizedBox(height: 10),
-            Container(
-              width: MediaQuery.of(context).size.width * 1,
-              child: Column(
-                children: [
-                  ElevatedButton.icon(
-                      onPressed: () {
-                        _getFromGallery();
-                      },
-                      icon: Icon(Icons.image_sharp),
-                      label: Text("Galeri")),
-                  ElevatedButton.icon(
-                      onPressed: () {
-                        _getFromCamera();
-                      },
-                      icon: Icon(Icons.camera_alt_rounded),
-                      label: Text("Kamera")),
-                ],
-              ),
-            ),
-          ],
-        ),
       );
 }

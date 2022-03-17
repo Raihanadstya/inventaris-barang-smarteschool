@@ -9,6 +9,9 @@ import 'custom_color.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/tap_bounce_container.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -51,18 +54,12 @@ class _LoginPageState extends State<LoginPage> {
 
         final _message = jsonDecode(response.body)['message'];
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(_message),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: Colors.green,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+        showTopSnackBar(
+          context,
+          CustomSnackBar.success(
+            message: _message,
           ),
-          margin: EdgeInsets.only(
-              bottom: MediaQuery.of(context).size.height - 180,
-              right: 20,
-              left: 20),
-        ));
+        );
       }
     } else {
       setState(() {
@@ -71,19 +68,12 @@ class _LoginPageState extends State<LoginPage> {
 
       final _message = jsonDecode(response.body)['message'];
 
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(_message),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: Colors.red,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+      showTopSnackBar(
+        context,
+        CustomSnackBar.error(
+          message: _message,
         ),
-        duration: Duration(milliseconds: 500),
-        margin: EdgeInsets.only(
-            bottom: MediaQuery.of(context).size.height - 150,
-            right: 20,
-            left: 20),
-      ));
+      );
     }
   }
 
