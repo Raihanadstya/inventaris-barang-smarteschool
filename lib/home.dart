@@ -59,7 +59,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   String dropdownValue = 'Milik';
   int? lokasiDropdownValue;
   File? _imageFile;
-  String? imagePath;
 
   Future<void> fetchBarang(int barangId) async {
     final response = await http.get(
@@ -134,7 +133,24 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Future<void> updateBarang() async {
-    // String? urlPhoto = await uploadFile(_imageFile!.path);
+    String? uriFoto = await uploadFile(_imageFile!.path);
+    Object body = {
+      "nama": "${_productNameController.text}",
+      "kode_barang": "${_productCodeController.text}",
+      "merk": "${_productMerkController.text}",
+      "tahun_beli": "${DateFormat("yyyy-MM-dd").format(_productBuyDate)}",
+      "asal": "${_productFromController.text}",
+      "deskripsi": "${_specProductController.text}",
+      "harga": "${_priceProductController.text}",
+      "jumlah": "${_totalProductController.text}",
+      "baik": "${_goodProductController.text}",
+      "rusak": "${badProductController.text}",
+      "nama_pemilik": "${_ownerProductController.text}",
+      "m_lokasi_id": "${lokasiDropdownValue}",
+      "kepemilikan": "${dropdownValue.toLowerCase()}",
+      "nota": "${_barang!.nota}",
+      "foto": [uriFoto]
+    };
     final response = await http.put(
         Uri.parse(
             'https://server-ujian.smarteschool.net/barang/${_barang!.id}'),
@@ -144,8 +160,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           'Origin': 'https://smkn26jkt.smarteschool.id',
           'Authorization': 'Bearer $_token',
         },
-        body:
-            '{"nama": "${_productNameController.text}", "kode_barang": "${_productCodeController.text}", "merk": "${_productMerkController.text}", "tahun_beli": "${DateFormat("yyyy-MM-dd").format(_productBuyDate)}", "asal": "${_productFromController.text}", "deskripsi":"${_specProductController.text}", "harga": "${_priceProductController.text}", "jumlah": "${_totalProductController.text}", "baik": "${_goodProductController.text}", "rusak": "${badProductController.text}", "nama_pemilik": "${_ownerProductController.text}", "m_lokasi_id": "${lokasiDropdownValue}", "kepemilikan": "${dropdownValue.toLowerCase()}", "nota":"${_barang!.nota}", "foto": "${_barang!.foto}"');
+        body: jsonEncode(body));
 
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
@@ -168,7 +183,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         ),
       );
     } else {
-      Navigator.pop(context);
       // If the server did not return a 200 OK response,
       // then throw an exception.
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -250,6 +264,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
+        Navigator.pop(context);
       });
     }
   }
@@ -263,6 +278,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
+        Navigator.of(context).pop();
       });
     }
   }
