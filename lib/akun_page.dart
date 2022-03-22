@@ -394,7 +394,7 @@ class _AkunPageState extends State<AkunPage> with TickerProviderStateMixin {
                                               RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
-                                                          18.0),
+                                                          10.0),
                                                   side: BorderSide(
                                                       color: Colors.white))),
                                         ),
@@ -494,25 +494,41 @@ class _AkunPageState extends State<AkunPage> with TickerProviderStateMixin {
                     // Text("orang"),
                   ],
                 )),
-            ElevatedButton.icon(
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          side: BorderSide(color: Colors.white))),
-                ),
-                onPressed: () {
-                  sharedPreferences
-                    ..clear()
-                    ..commit();
+            Container(
+              margin: EdgeInsets.all(10),
+              child: SizedBox(
+                width: 365,
+                height: 40,
+                child: ElevatedButton.icon(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.white),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              side: BorderSide(color: Colors.black))),
+                    ),
+                    onPressed: () {
+                      sharedPreferences
+                        ..clear()
+                        ..commit();
 
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                          builder: (BuildContext context) => LoginPage()),
-                      (Route<dynamic> route) => false);
-                },
-                icon: Icon(Icons.logout_outlined),
-                label: Text("Keluar Akun"))
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => LoginPage()),
+                          (Route<dynamic> route) => false);
+                    },
+                    icon: Icon(
+                      Icons.logout_outlined,
+                      color: Colors.black,
+                    ),
+                    label: Text(
+                      "Keluar",
+                      style: TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.w800),
+                    )),
+              ),
+            )
           ],
         )),
       ),

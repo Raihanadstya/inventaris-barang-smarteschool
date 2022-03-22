@@ -131,7 +131,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       // then throw an exception.
       showTopSnackBar(
         context,
-        CustomSnackBar.error(
+        CustomSnackBar.info(
           message: "Sesi anda sudah habis, harap login kembali",
         ),
       );
@@ -298,7 +298,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     _getToken();
     super.initState();
     controller = BottomSheet.createAnimationController(this);
-    controller.duration = Duration(milliseconds: 500);
+    controller.duration = Duration(milliseconds: 350);
   }
 
   @override
@@ -523,6 +523,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 20.0),
                           child: Scrollbar(
                             child: ListView(
+                              padding: EdgeInsets.only(left: 10.0, right: 10.0),
                               children: [
                                 Column(
                                     crossAxisAlignment:
@@ -536,7 +537,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w800,
-                                                  fontSize: 20)),
+                                                  fontSize: 17)),
                                           // if (_user != null)
                                           _user!.role == 'admin'
                                               ? InkWell(
@@ -621,21 +622,25 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                       ),
                                       SizedBox(height: 40),
                                       Center(
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          child: _barang!.foto == null
-                                              ? Image(
-                                                  image: AssetImage(
-                                                      "assets/images/icon v1.png"),
-                                                  width: 120,
-                                                  height: 120,
-                                                )
-                                              : Image.network(
-                                                  (_barang!.foto).toString(),
-                                                  width: 200,
-                                                  height: 200,
-                                                ),
+                                        child: Container(
+                                          padding: EdgeInsets.all(10),
+                                          width: 200,
+                                          height: 200,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20))),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            child: Image(
+                                              image: NetworkImage(
+                                                (_barang!.foto).toString(),
+                                                // width: 200,
+                                                // height: 200,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                       SizedBox(height: 60),
@@ -648,14 +653,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                               "Nama Barang",
                                               style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 15),
+                                                  fontSize: 13),
                                             ),
                                             Text(
                                               _barang!.nama,
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w800,
-                                                  fontSize: 15),
+                                                  fontSize: 13),
                                             ),
                                           ],
                                         ),
@@ -669,14 +674,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                               "Merk",
                                               style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 15),
+                                                  fontSize: 13),
                                             ),
                                             Text(
                                               _barang!.merk,
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w800,
-                                                  fontSize: 15),
+                                                  fontSize: 13),
                                             ),
                                           ],
                                         ),
@@ -690,14 +695,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                               "No. Kode Barang",
                                               style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 15),
+                                                  fontSize: 13),
                                             ),
                                             Text(
                                               _barang!.kodeBarang,
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w800,
-                                                  fontSize: 15),
+                                                  fontSize: 13),
                                             ),
                                           ],
                                         ),
@@ -711,14 +716,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                               "Asal usul",
                                               style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 15),
+                                                  fontSize: 13),
                                             ),
                                             Text(
                                               _barang!.asal,
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w800,
-                                                  fontSize: 15),
+                                                  fontSize: 13),
                                             ),
                                           ],
                                         ),
@@ -732,14 +737,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                               "Spesifikasi",
                                               style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 15),
+                                                  fontSize: 13),
                                             ),
                                             Text(
                                               _barang!.deskripsi,
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w800,
-                                                  fontSize: 15),
+                                                  fontSize: 13),
                                             ),
                                           ],
                                         ),
@@ -753,7 +758,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                               "Harga",
                                               style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 15),
+                                                  fontSize: 13),
                                             ),
                                             Text(
                                               CurrencyFormat.convertToIdr(
@@ -761,7 +766,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w800,
-                                                  fontSize: 15),
+                                                  fontSize: 13),
                                             ),
                                           ],
                                         ),
@@ -775,7 +780,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                               "Tanggal Beli",
                                               style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 15),
+                                                  fontSize: 13),
                                             ),
                                             Text(
                                               new DateFormat(
@@ -784,7 +789,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w800,
-                                                  fontSize: 15),
+                                                  fontSize: 13),
                                             ),
                                           ],
                                         ),
@@ -798,7 +803,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                             "Kepemilikan",
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 15),
+                                                fontSize: 13),
                                           ),
                                           Text(
                                             _barang!.kepemilikan == null
@@ -807,7 +812,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                             style: TextStyle(
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.w800,
-                                                fontSize: 15),
+                                                fontSize: 13),
                                           ),
                                         ],
                                       ),
@@ -820,14 +825,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                             "Nama Pemilik/Peminjam",
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 15),
+                                                fontSize: 13),
                                           ),
                                           Text(
                                             "${_barang!.namaPemilik ?? "-"}",
                                             style: TextStyle(
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.w800,
-                                                fontSize: 15),
+                                                fontSize: 13),
                                           ),
                                         ],
                                       ),
@@ -841,14 +846,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                               "Lokasi",
                                               style: TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 15),
+                                                  fontSize: 13),
                                             ),
                                             Text(
                                               _barang!.lokasi,
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w800,
-                                                  fontSize: 15),
+                                                  fontSize: 13),
                                             ),
                                           ],
                                         ),
@@ -867,7 +872,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                                 Text('Jumlah',
                                                     style: TextStyle(
                                                         color: Colors.black,
-                                                        fontSize: 15.0,
+                                                        fontSize: 13.0,
                                                         fontWeight:
                                                             FontWeight.w800))
                                               ]),
@@ -875,7 +880,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                                 Text('Baik',
                                                     style: TextStyle(
                                                         color: Colors.black,
-                                                        fontSize: 15.0,
+                                                        fontSize: 13.0,
                                                         fontWeight:
                                                             FontWeight.w800))
                                               ]),
@@ -883,7 +888,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                                 Text('Rusak',
                                                     style: TextStyle(
                                                         color: Colors.black,
-                                                        fontSize: 15.0,
+                                                        fontSize: 13.0,
                                                         fontWeight:
                                                             FontWeight.w800))
                                               ]),
@@ -894,7 +899,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                                   _barang!.jumlah.toString(),
                                                   style: TextStyle(
                                                       color: Colors.black,
-                                                      fontSize: 15),
+                                                      fontSize: 13),
                                                 )
                                               ]),
                                               Column(children: [
@@ -902,7 +907,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                                   _barang!.baik.toString(),
                                                   style: TextStyle(
                                                       color: Colors.black,
-                                                      fontSize: 15),
+                                                      fontSize: 13),
                                                 )
                                               ]),
                                               Column(children: [
@@ -910,7 +915,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                                   _barang!.rusak.toString(),
                                                   style: TextStyle(
                                                       color: Colors.black,
-                                                      fontSize: 15),
+                                                      fontSize: 13),
                                                 )
                                               ]),
                                             ]),
@@ -957,54 +962,79 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     children: [
                       Align(
                         alignment: Alignment.center,
-                        child: GestureDetector(
-                          onTap: () {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return CupertinoAlertDialog(
-                                    title:
-                                        Text("Pilh media untuk mengambil foto"),
-                                    actions: [
-                                      CupertinoDialogAction(
-                                          onPressed: () {
-                                            _getFromGallery();
-                                          },
-                                          child: Text("Galeri")),
-                                      CupertinoDialogAction(
-                                          onPressed: () {
-                                            _getFromCamera();
-                                          },
-                                          child: Text("kamera")),
-                                    ],
-                                  );
-                                });
-                          },
+                        child: Center(
                           child: Container(
-                              decoration: BoxDecoration(
-                                  color: birumuda,
-                                  // border: Border.all(),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(25))),
-                              child: Row(
-                                children: [
-                                  _imageFile == null
-                                      ?
-                                      // ?
-                                      Image.network(
-                                          (_barang!.foto).toString(),
-                                          width: 200,
-                                          height: 200,
-                                        )
-                                      : Image.file(
-                                          (_imageFile!),
-                                          width: 200,
-                                          height: 200,
-                                        ),
-                                  IconButton(
-                                      onPressed: null, icon: Icon(Icons.edit))
-                                ],
-                              )),
+                              // decoration: BoxDecoration(
+                              //     color: birumuda,
+                              //     // border: Border.all(),
+                              //     borderRadius: BorderRadius.all(
+                              //         Radius.circular(25))),
+                              child: Stack(
+                            children: [
+                              _imageFile == null
+                                  ?
+                                  // ?Q
+                                  Image.network(
+                                      (_barang!.foto).toString(),
+                                      width: 200,
+                                      height: 200,
+                                    )
+                                  : Image.file(
+                                      (_imageFile!),
+                                      width: 200,
+                                      height: 200,
+                                    ),
+                              Positioned(
+                                right: 25.0,
+                                top: 0.0,
+                                child: Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.2),
+                                            spreadRadius: 2,
+                                            blurRadius: 2,
+                                            offset: Offset(0, 2), // c
+                                            blurStyle: BlurStyle.normal,
+                                          ),
+                                        ],
+                                        color: primaryColor,
+                                        // border: Border.all(),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(40))),
+                                    child: IconButton(
+                                        onPressed: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return CupertinoAlertDialog(
+                                                  title: Text(
+                                                      "Pilh media untuk mengambil foto"),
+                                                  actions: [
+                                                    CupertinoDialogAction(
+                                                        onPressed: () {
+                                                          _getFromGallery();
+                                                        },
+                                                        child: Text("Galeri")),
+                                                    CupertinoDialogAction(
+                                                        onPressed: () {
+                                                          _getFromCamera();
+                                                        },
+                                                        child: Text("kamera")),
+                                                  ],
+                                                );
+                                              });
+                                        },
+                                        icon: Icon(
+                                          Icons.edit,
+                                          size: 20,
+                                          color: Colors.white,
+                                        ))),
+                              )
+                            ],
+                          )),
                         ),
                       ),
                     ],
@@ -1225,6 +1255,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   ),
                   ElevatedButton(
                     style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(primaryColor),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
