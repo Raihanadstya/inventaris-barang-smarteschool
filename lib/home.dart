@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, sized_box_for_whitespace, unused_label, unnecessary_string_interpolations, unnecessary_null_comparison, unused_element, unnecessary_new, unused_field, await_only_futures, deprecated_member_use, unnecessary_brace_in_string_interps, unused_local_variable, prefer_typing_uninitialized_variables
+// ignore_for_file: unused_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, sized_box_for_whitespace, unused_label, unnecessary_string_interpolations, unnecessary_null_comparison, unused_element, unnecessary_new, unused_field, await_only_futures, deprecated_member_use, unnecessary_brace_in_string_interps, unused_local_variable, prefer_typing_uninitialized_variables, non_constant_identifier_names, unrelated_type_equality_checks, curly_braces_in_flow_control_structures, unnecessary_this
 import 'dart:convert';
 import 'dart:io';
 
@@ -79,7 +79,30 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       // then parse the JSON.
 
       setState(() {
-        _barang = Barang.fromJson(jsonDecode(response.body)['barang']);
+        final _checkBarcodeSekolah = jsonDecode(response.body)['barang'];
+
+        if (_checkBarcodeSekolah != null) {
+          _barang = Barang.fromJson(jsonDecode(response.body)['barang']);
+        } else {
+          showTopSnackBar(
+              context,
+              CustomSnackBar.error(
+                message: "Barcode ini tidak terdaftar disekolah anda",
+              ));
+        }
+        try {} catch (e) {
+          print(e);
+        }
+
+        // if (response.headers.containsValue(origin)) {
+        // } else {
+        //   showTopSnackBar(
+        //     context,
+        //     CustomSnackBar.error(
+        //       message: "Barcode ini tidak terdaftar disekolah anda",
+        //     ),
+        //   );
+        // }
 
         if (_barang != null) {
           _showCustomDialog(context);
@@ -430,6 +453,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
       if (barangId != null && barangId != -1) {
         fetchBarang(barangId);
+      } else {
+        showTopSnackBar(
+          context,
+          CustomSnackBar.error(
+            message: "Barcode ini tidak terdaftar disekolah anda",
+          ),
+        );
       }
     } on PlatformException {
       scanResult = 'Failed to get platform version';

@@ -108,13 +108,16 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 20.0),
-                        child: Text(
-                          "Masuk terlebih dahulu untuk melanjutkan",
-                          style: TextStyle(
-                              color: primaryText,
-                              fontSize: 15,
-                              fontFamily: "NunitoSans",
-                              fontWeight: FontWeight.w800),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Masuk terlebih dahulu untuk melanjutkan",
+                            style: TextStyle(
+                                color: primaryText,
+                                fontSize: 15,
+                                fontFamily: "NunitoSans",
+                                fontWeight: FontWeight.w800),
+                          ),
                         ),
                       ),
                       Padding(

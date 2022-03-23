@@ -34,48 +34,38 @@ class _BerandaPageState extends State<BerandaPage> {
 
   // String? token = sharedPreferences.getString("token");
 
-  Future<void> fetchBarang(int barangId) async {
-    final response = await http.get(
-        Uri.parse('https://server-ujian.smarteschool.net/barang/$barangId'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Origin': "https://smk.smarteschool.id/",
-          'Authorization':
-              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjE0NzI1OCwiaWF0IjoxNjM5Mjc1Nzg4LCJleHAiOjE2MzkyOTczODh9.wUVmHC7gqNFg2Qs9qEYZ3qjoH3Hm8poKTwsRN6raEVw',
-        });
+  // Future<void> fetchBarang(int barangId) async {
+  //   final response = await http.get(
+  //       Uri.parse('https://server-ujian.smarteschool.net/barang/$barangId'),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Accept': 'application/json',
+  //         'Origin': "https://smk.smarteschool.id/",
+  //         'Authorization':
+  //             'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjE0NzI1OCwiaWF0IjoxNjM5Mjc1Nzg4LCJleHAiOjE2MzkyOTczODh9.wUVmHC7gqNFg2Qs9qEYZ3qjoH3Hm8poKTwsRN6raEVw',
+  //       });
 
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      log(response.body);
+  //   if (response.statusCode == 200) {
+  //     // If the server did return a 200 OK response,
+  //     // then parse the JSON.
+  //     log(response.body);
 
-      setState(() {
-        _barang = Barang.fromJson(jsonDecode(response.body)['barang']);
-      });
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(response.toString())));
-    }
-  }
+  //     setState(() {
+  //       _barang = Barang.fromJson(jsonDecode(response.body)['barang']);
+  //     });
+  //   } else {
+  //     // If the server did not return a 200 OK response,
+  //     // then throw an exception.
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text(response.toString())));
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
     // checkLoginStatus();
     // futureBarang = fetchBarang();
-  }
-
-  checkLoginStatus() async {
-    sharedPreferences = await SharedPreferences.getInstance();
-    if (sharedPreferences.getString("token") == null) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-              builder: (BuildContext context) => const LoginPage()),
-          (Route<dynamic> route) => false);
-    }
   }
 
   @override
@@ -132,23 +122,23 @@ class _BerandaPageState extends State<BerandaPage> {
     );
   }
 
-  Future scanBarcode() async {
-    String scanResult;
+  // Future scanBarcode() async {
+  //   String scanResult;
 
-    try {
-      scanResult = await FlutterBarcodeScanner.scanBarcode(
-          "#FF2680EB", "Batal", true, ScanMode.BARCODE);
+  //   try {
+  //     scanResult = await FlutterBarcodeScanner.scanBarcode(
+  //         "#FF2680EB", "Batal", true, ScanMode.BARCODE);
 
-      final barangId = int.tryParse(scanResult);
-      if (barangId != null) {
-        fetchBarang(barangId);
-      }
-    } on PlatformException {
-      scanResult = 'Failed to get platform version';
-    }
+  //     final barangId = int.tryParse(scanResult);
+  //     if (barangId != null) {
+  //       fetchBarang(barangId);
+  //     }
+  //   } on PlatformException {
+  //     scanResult = 'Failed to get platform version';
+  //   }
 
-    if (!mounted) return;
+  //   if (!mounted) return;
 
-    setState(() => this.scanResult = scanResult);
-  }
+  //   setState(() => this.scanResult = scanResult);
+  // }
 }
