@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, sized_box_for_whitespace, unused_label, unnecessary_string_interpolations, unnecessary_null_comparison, unused_element, unnecessary_new, unused_field, await_only_futures, deprecated_member_use, unnecessary_brace_in_string_interps, unused_local_variable, prefer_typing_uninitialized_variables, non_constant_identifier_names, unrelated_type_equality_checks, curly_braces_in_flow_control_structures, unnecessary_this
+// ignore_for_file: unused_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, sized_box_for_whitespace, unused_label, unnecessary_string_interpolations, unnecessary_null_comparison, unused_element, unnecessary_new, unused_field, await_only_futures, deprecated_member_use, unnecessary_brace_in_string_interps, unused_local_variable, prefer_typing_uninitialized_variables, non_constant_identifier_names, unrelated_type_equality_checks, curly_braces_in_flow_control_structures, unnecessary_this, prefer_if_null_operators, prefer_final_fields
 import 'dart:convert';
 import 'dart:io';
 
@@ -40,7 +40,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   Barang? _barang;
   Lokasi? _lokasi;
   String? scanResult;
-
+  // String? uriFoto;
   int currentTab = 0;
   final List<Widget> screens = [
     BerandaPage(),
@@ -60,7 +60,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   final _locationProductController = TextEditingController();
   DateTime _productBuyDate = DateTime.now();
   final _setTimeController = TextEditingController();
-  String dropdownValue = 'Milik';
+  String? dropdownValue;
+  List<String> _dataKepemilikan = ['Milik', 'Sewa', 'Pinjam', 'Bukan Milik'];
   int? lokasiDropdownValue;
   File? _imageFile;
 
@@ -165,7 +166,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Future<void> updateBarang() async {
-    String? uriFoto = await uploadFile(_imageFile!.path);
+    String? uriFoto;
+    if (_imageFile != null) {
+      uriFoto = await uploadFile(_imageFile!.path);
+    }
+
+    // setState(() => this.uriFoto = uriFoto);
     Object body = {
       "nama": "${_productNameController.text}",
       "kode_barang": "${_productCodeController.text}",
@@ -179,9 +185,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       "rusak": "${badProductController.text}",
       "nama_pemilik": "${_ownerProductController.text}",
       "m_lokasi_id": "${lokasiDropdownValue}",
-      "kepemilikan": "${dropdownValue.toLowerCase()}",
+      "kepemilikan": "${dropdownValue!.toLowerCase()}",
       "nota": "${_barang!.nota}",
-      "foto": [uriFoto]
+      "foto": _imageFile != null ? [uriFoto] : "${_barang!.foto}"
     };
     final response = await http.put(
         Uri.parse(
@@ -1174,23 +1180,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           height: 2,
                           // color: Colors.deepPurpleAccent,
                         ),
-                        onChanged: (String? newValue) {
+                        onChanged: (value) {
                           setState(() {
-                            dropdownValue = newValue!;
+                            dropdownValue = value;
                           });
                           localSetState(() {
-                            dropdownValue = newValue!;
+                            dropdownValue = value;
                           });
                         },
-                        items: <String>[
-                          'Milik',
-                          'Sewa',
-                          'Pinjam',
-                          'Bukan Milik'
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
+                        items: _dataKepemilikan.map((item) {
+                          return DropdownMenuItem(
+                            child: Text(item),
+                            value: item,
                           );
                         }).toList(),
                       ),
