@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, sized_box_for_whitespace, unused_label, unnecessary_string_interpolations, unnecessary_null_comparison, unused_element, unnecessary_new, unused_field, await_only_futures, deprecated_member_use, unnecessary_brace_in_string_interps, unused_local_variable, prefer_typing_uninitialized_variables, non_constant_identifier_names, unrelated_type_equality_checks, curly_braces_in_flow_control_structures, unnecessary_this, prefer_if_null_operators, prefer_final_fields, avoid_print, prefer_collection_literals
+// ignore_for_file: unused_import, prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, sized_box_for_whitespace, unused_label, unnecessary_string_interpolations, unnecessary_null_comparison, unused_element, unnecessary_new, unused_field, await_only_futures, deprecated_member_use, unnecessary_brace_in_string_interps, unused_local_variable, prefer_typing_uninitialized_variables, non_constant_identifier_names, unrelated_type_equality_checks, curly_braces_in_flow_control_structures, unnecessary_this, prefer_if_null_operators, prefer_final_fields, avoid_print, prefer_collection_literals, use_build_context_synchronously
 import 'dart:convert';
 import 'dart:io';
 
@@ -68,11 +68,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   Future<void> fetchBarang(int barangId) async {
     final response = await http.get(
-        Uri.parse('https://server-ujian.smarteschool.net/barang/$barangId'),
+        Uri.parse('https://juli-desember.smarteschool.net/barang/$barangId'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Origin': 'https://smkn26jkt.smarteschool.id',
+          'Origin': 'https://smk.smarteschool.id',
           'Authorization': 'Bearer $_token',
         });
 
@@ -86,11 +86,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         if (_checkBarcodeSekolah != null) {
           _barang = Barang.fromJson(jsonDecode(response.body)['barang']);
         } else {
-          showTopSnackBar(
-              context,
-              CustomSnackBar.error(
-                message: "Barcode ini tidak terdaftar disekolah anda",
-              ));
+          ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
+            content: Text('Barcode ini tidak terdaftar di sekolah'),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+          ));
         }
         try {} catch (e) {
           print(e);
@@ -136,11 +137,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   Future<void> fetchUser() async {
     final response = await http.get(
-        Uri.parse('https://server-ujian.smarteschool.net/profil'),
+        Uri.parse('https://juli-desember.smarteschool.net/profil'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Origin': 'https://smkn26jkt.smarteschool.id',
+          'Origin': 'https://smk.smarteschool.id',
           'Authorization': 'Bearer $_token',
         });
 
@@ -154,12 +155,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      showTopSnackBar(
-        context,
-        CustomSnackBar.info(
-          message: "Sesi anda sudah habis, harap login kembali",
+
+      ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
+        content: Text('Sesi anda habis'),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
         ),
-      );
+        margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).size.height - 100,
+            right: 20,
+            left: 20),
+      ));
 
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const LoginPage()));
@@ -194,11 +201,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     };
     final response = await http.put(
         Uri.parse(
-            'https://server-ujian.smarteschool.net/barang/${_barang!.id}'),
+            'https://juli-desember.smarteschool.net/barang/${_barang!.id}'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Origin': 'https://smkn26jkt.smarteschool.id',
+          'Origin': 'https://smk.smarteschool.id',
           'Authorization': 'Bearer $_token',
         },
         body: jsonEncode(body));
@@ -209,32 +216,44 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
       Navigator.pop(context);
       fetchBarang(_barang!.id);
-      showTopSnackBar(
-        context,
-        CustomSnackBar.success(
-          message: "Data Berhasil diubah",
+
+      ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
+        content: Text('Berhasil di ubah'),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
         ),
-      );
+        margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).size.height - 100,
+            right: 20,
+            left: 20),
+      ));
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      showTopSnackBar(
-        context,
-        CustomSnackBar.error(
-          message: "Anda tidak memiliki akses untuk mengedit",
+
+      ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
+        content: Text('Anda tidak memiliki akses untuk mengedit'),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
         ),
-      );
+        margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).size.height - 100,
+            right: 20,
+            left: 20),
+      ));
     }
   }
 
   List _dataLokasi = [];
   void fetchLokasi() async {
     final response = await http.get(
-        Uri.parse('https://server-ujian.smarteschool.net/lokasi'),
+        Uri.parse('https://juli-desember.smarteschool.net/lokasi'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Origin': 'https://smkn26jkt.smarteschool.id',
+          'Origin': 'https://smk.smarteschool.id',
           'Authorization': 'Bearer $_token',
         });
 
@@ -463,12 +482,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       if (barangId != null && barangId != -1) {
         fetchBarang(barangId);
       } else {
-        showTopSnackBar(
-          context,
-          CustomSnackBar.error(
-            message: "Barcode ini tidak terdaftar disekolah anda",
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Barcode belum di scan'),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
           ),
-        );
+        ));
       }
     } on PlatformException {
       scanResult = 'Failed to get platform version';

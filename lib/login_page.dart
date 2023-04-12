@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_init_to_null, unnecessary_new, unused_import, unused_field, avoid_print, avoid_web_libraries_in_flutter
+// ignore_for_file: avoid_unnecessary_containers, prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_init_to_null, unnecessary_new, unused_import, unused_field, avoid_print, avoid_web_libraries_in_flutter, use_build_context_synchronously
 
 import 'dart:convert';
 
@@ -23,7 +23,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   bool _isObscure = true;
-  final _baseUrl = 'https://server-ujian.smarteschool.net/login';
+  final _baseUrl = 'https://juli-desember.smarteschool.net/login';
   // final _baseUrl = 'http://192.168.146.241:8080/login';
 
   signIn(String whatsapp, password) async {
@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
     var response = await http.post(Uri.parse(_baseUrl), body: data, headers: {
       // 'Content-Type': 'application/json',
       // 'Accept': 'application/json',
-      'Origin': "https://smkn26jkt.smarteschool.id",
+      'Origin': "https://smk.smarteschool.id",
     });
     if (response.statusCode == 200) {
       jsonResponse = json.decode(response.body);
@@ -54,12 +54,12 @@ class _LoginPageState extends State<LoginPage> {
 
         final _message = jsonDecode(response.body)['message'];
 
-        showTopSnackBar(
-          context,
-          CustomSnackBar.success(
-            message: _message,
+        ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
+          content: Text(_message),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
           ),
-        );
+        ));
       }
     } else {
       setState(() {
@@ -68,12 +68,17 @@ class _LoginPageState extends State<LoginPage> {
 
       final _message = jsonDecode(response.body)['message'];
 
-      showTopSnackBar(
-        context,
-        CustomSnackBar.error(
-          message: _message,
+      ScaffoldMessenger.of(context).showSnackBar(new SnackBar(
+        content: Text(_message),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
         ),
-      );
+        margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).size.height - 100,
+            right: 20,
+            left: 20),
+      ));
     }
   }
 

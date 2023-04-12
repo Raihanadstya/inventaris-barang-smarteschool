@@ -44,11 +44,11 @@ class _AkunPageState extends State<AkunPage> with TickerProviderStateMixin {
 
   Future<void> fetchUser() async {
     final response = await http.get(
-        Uri.parse('https://server-ujian.smarteschool.net/profil'),
+        Uri.parse('https://juli-desember.smarteschool.net/profil'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Origin': 'https://smkn26jkt.smarteschool.id',
+          'Origin': 'https://smk.smarteschool.id',
           'Authorization': 'Bearer $_token',
         });
 
